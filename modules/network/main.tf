@@ -22,6 +22,10 @@ locals {
       ManagedBy   = "Terraform"
     }
   )
+  az_map = {
+    for index, az in var.azs :
+    az => index
+  }
 
   vpc_name     = "${local.name_prefix}-vpc"
   igw_name     = "${local.name_prefix}-igw"
@@ -52,27 +56,28 @@ resource "aws_internet_gateway" "main" {
 
 # Subnets Públicas 
 resource "aws_subnet" "public" {
-  count                   = length(var.azs)
+  for_each = local.az_map
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = cidrsubnet(var.cidr_block, 8, count.index)          # /24 por subnet
-  availability_zone       = var.azs[count.index]
+  cidr_block              = cidrsubnet(var.cidr_block, 8, each.value)
+  availability_zone       = each.key
   map_public_ip_on_launch = true
 
   tags = merge(local.common_tags, {
-    Name = "${local.name_prefix}-public-${var.azs[count.index]}"
+    Name = "${local.name_prefix}-public-${each.key}"
     Type = "public"
   })
 }
 
 # Subnets Privadas 
 resource "aws_subnet" "private" {
-  count             = length(var.azs)
+  for_each = local.az_map
+
   vpc_id            = aws_vpc.main.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, count.index + length(var.azs))  # evita sobreposição
-  availability_zone = var.azs[count.index]
+  cidr_block        = cidrsubnet(var.cidr_block, 8, each.value + length(var.azs))
+  availability_zone = each.key
 
   tags = merge(local.common_tags, {
-    Name = "${local.name_prefix}-private-${var.azs[count.index]}"
+    Name = "${local.name_prefix}-private-${each.key}"
     Type = "private"
   })
 }
@@ -92,8 +97,9 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  count          = length(aws_subnet.public)
-  subnet_id      = aws_subnet.public[count.index].id
+  for_each = aws_subnet.public
+
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
@@ -108,7 +114,7 @@ resource "aws_eip" "nat" {
 resource "aws_nat_gateway" "main" {
   count         = var.enable_nat_gateway && var.single_nat_gateway ? 1 : 0
   allocation_id = aws_eip.nat[0].id
-  subnet_id     = aws_subnet.public[0].id  
+  subnet_id     = values(aws_subnet.public)[0].id  
 
   tags = merge(local.common_tags, {
     Name = local.nat_name
@@ -133,7 +139,8 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count          = var.enable_nat_gateway ? length(aws_subnet.private) : 0
-  subnet_id      = aws_subnet.private[count.index].id
+  for_each = var.enable_nat_gateway ? aws_subnet.private : {}
+
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.private[0].id
 }

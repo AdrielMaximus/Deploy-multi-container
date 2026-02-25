@@ -1,0 +1,52 @@
+# Terraform - arquivos de estado e cache
+.terraform/
+*.lock.hcl          # lock file de providers (gerado pelo terraform init)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Arquivos sensíveis (nunca commitar!)
+*.tfvars
+*.tfvars.json
+terraform.tfvars
+terraform.tfvars.json
+personal.tfvars
+*.auto.tfvars
+*.auto.tfvars.json
+secrets.tfvars
+.env
+.env.*
+credentials.tf
+aws_credentials.tf
+
+# Logs e temporários
+*.log
+*.bak
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Diretórios de build / teste local
+dist/
+build/
+tmp/
+temp/
+
+# IDE / editor files
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos gerados por ferramentas
+.terraformrc
+terraform.rc
+atlantis.yaml
+*.plan
+*.plan.json
