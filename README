@@ -1,12 +1,12 @@
 # Projeto: Construindo Infraestrutura Realista com Terraform e AWS
 
-## 💭 Por que eu criei esse projeto?
+## Por que eu criei esse projeto?
 
 Eu queria sair do básico.
 
-Conseguir mostrar a mim mesmo que estou pronto para coisas reais, demandas reais, eu quis entender como a infraestrutura é construída de verdade em um ambiente profissional. Ver a realidade do que me espera em uma empresa.
+Conseguir mostrar a mim mesmo que estou pronto para coisas reais, demandas reais. Quis entender como a infraestrutura é construída de verdade em um ambiente profissional. Ver a realidade do que me espera em uma empresa.
 
-Esse projeto nasceu da vontade de aprender fazendo.  
+Esse projeto nasceu da vontade de aprender fazendo.
 
 ---
 
@@ -25,7 +25,7 @@ Tudo isso usando **Terraform** e arquitetura modular.
 
 ---
 
-## 🧠 O que eu quis demonstrar aqui?
+## O que eu quis demonstrar aqui?
 
 Mais do que criar recursos, eu quis mostrar que entendo:
 
@@ -40,7 +40,7 @@ Esse projeto não nasceu perfeito.
 Eu enfrentei problemas com:
 
 - `for_each` e outputs
-- Onde e como usar as variaveis
+- Onde e como usar as variáveis
 - Dependências entre módulos
 - Organização de pastas
 
@@ -48,7 +48,7 @@ E foi exatamente isso que me fez aprender de verdade.
 
 ---
 
-## 🏗 Como a arquitetura funciona
+## Como a arquitetura funciona
 
 O fluxo da infraestrutura é o seguinte:
 
@@ -60,33 +60,31 @@ O fluxo da infraestrutura é o seguinte:
 
 ### Ambientes
 
-| Ambiente  | Objetivo | Característica |
-|-----------|----------|----------------|
-| dev       | Desenvolvimento | Estrutura mais simples |
-| staging   | Testes | Simula produção |
-| prod      | Produção | Multi-AZ para alta disponibilidade |
+| Ambiente  | Objetivo          | Característica principal                  |
+|-----------|-------------------|-------------------------------------------|
+| dev       | Desenvolvimento   | Estrutura mais simples                    |
+| staging   | Testes            | Simula produção                           |
+| prod      | Produção          | Multi-AZ para alta disponibilidade        |
 
 Produção foi pensada com mais redundância.  
 Desenvolvimento foi pensado para ser leve e econômico.
 
 ---
 
-## 📁 Estrutura do Projeto
-
+## Estrutura do Projeto
 terraform/
 │
 ├── modules/
-│ ├── network/
-│ ├── iam/
-│ ├── compute/
-│ └── database/
+│   ├── network/
+│   ├── iam/
+│   ├── compute/
+│   └── database/
 │
 ├── environments/
-│ ├── dev/
-│ ├── staging/
-│ └── prod/
-
-Eu optei por modularizar tudo para manter organização e permitir que o projeto cresça sem virar bagunça.
+│   ├── dev/
+│   ├── staging/
+│   └── prod/
+textEu optei por modularizar tudo para manter organização e permitir que o projeto cresça sem virar bagunça.
 
 ---
 
@@ -94,20 +92,17 @@ Eu optei por modularizar tudo para manter organização e permitir que o projeto
 
 Entre no ambiente desejado:
 
+```bash
 cd environments/dev
-
+# ou staging / prod
 Depois execute:
-
-terraform init
+Bashterraform init
 terraform plan
 terraform apply
-
 Simples. Reproduzível. Versionado.
 
----
-
-## ❤️ O que esse projeto representa pra mim
-
-Esse projeto representa uma transição de apenas um desejo de entrar na area do DevOps para alguem que realmente pode estar lá.
-
+O que esse projeto representa pra mim
+Esse projeto representa uma transição:
+de apenas um desejo de entrar na área do DevOps
+para alguém que realmente pode estar lá.
 Ele mostra o meu crescimento profissional e pessoal.
