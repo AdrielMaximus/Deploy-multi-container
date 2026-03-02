@@ -81,7 +81,7 @@ terraform init
 terraform plan
 terraform apply
 Use o código com cuidado.
-
+```
 ---
 
 Simples. Reproduzível. Versionado.
