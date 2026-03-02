@@ -1,108 +1,87 @@
-# Projeto: Construindo Infraestrutura Realista com Terraform e AWS
+markdown
+<p align="center">
+  <img src="https://via.placeholder.com" alt="Banner do Projeto">
+</p>
 
-## Por que eu criei esse projeto?
+<h1 align="center">🏗️ Construindo Infraestrutura Realista (Terraform + AWS)</h1>
 
-Eu queria sair do básico.
-
-Conseguir mostrar a mim mesmo que estou pronto para coisas reais, demandas reais. Quis entender como a infraestrutura é construída de verdade em um ambiente profissional. Ver a realidade do que me espera em uma empresa.
-
-Esse projeto nasceu da vontade de aprender fazendo.
-
----
-
-## O que esse projeto faz?
-
-Ele provisiona automaticamente, na Amazon Web Services (AWS):
-
-- Uma VPC organizada
-- Subnets públicas e privadas
-- Uma instância EC2
-- Um banco PostgreSQL via RDS
-- IAM Role para controle de acesso
-- Ambientes separados: `dev`, `staging` e `prod`
-
-Tudo isso usando **Terraform** e arquitetura modular.
+<p align="center">
+  <img src="https://img.shields.io" />
+  <img src="https://img.shields.io" />
+  <img src="https://img.shields.io" />
+</p>
 
 ---
 
-## O que eu quis demonstrar aqui?
-
-Mais do que criar recursos, eu quis mostrar que entendo:
-
-- Separação de ambientes
-- Modularização
-- Reutilização de código
-- Organização de projeto
-- Segurança básica (banco em subnet privada)
-- Pensamento voltado para produção (multi-AZ no ambiente prod)
-
-Esse projeto não nasceu perfeito.  
-Eu enfrentei problemas com:
-
-- `for_each` e outputs
-- Onde e como usar as variáveis
-- Dependências entre módulos
-- Organização de pastas
-
-E foi exatamente isso que me fez aprender de verdade.
+### 🎯 Por que eu criei esse projeto?
+Eu queria sair do básico e provar a mim mesmo que estou pronto para **demandas reais**. Este projeto nasceu da vontade de entender como a infraestrutura é construída profissionalmente, enfrentando os desafios de um ambiente de produção real. Foi a transição do "desejo de aprender" para o "aprender fazendo".
 
 ---
 
-## Como a arquitetura funciona
+### 🚀 O que este projeto faz?
+Provisionamento automático na **AWS** utilizando arquitetura modular:
+- 🌐 **VPC Organizada**: Com Subnets públicas e privadas.
+- 💻 **Instância EC2**: Camada de processamento.
+- 🐘 **RDS PostgreSQL**: Banco de dados gerenciado.
+- 🔐 **IAM Role**: Controle granular de acesso.
+- 🏗️ **Multi-Environment**: Separação total entre `dev`, `staging` e `prod`.
 
-O fluxo da infraestrutura é o seguinte:
+---
 
-1. O módulo `network` cria a VPC e as subnets.
-2. O módulo `compute` sobe a EC2 na subnet pública.
-3. O módulo `database` cria o RDS nas subnets privadas.
-4. Apenas a EC2 pode acessar o banco.
-5. Cada ambiente utiliza os mesmos módulos com configurações diferentes.
+### 🧠 O que eu quis demonstrar aqui?
+Mais do que criar recursos, este projeto reflete meu domínio em:
+- **Modularização e Reutilização**: Código limpo e escalável.
+- **Segurança**: Banco de dados isolado em subnets privadas.
+- **Resiliência**: Configuração Multi-AZ para o ambiente de produção.
+- **Resolução de Problemas**: Superação de desafios com `for_each`, dependências de módulos e outputs.
 
-### Ambientes
+---
 
-| Ambiente  | Objetivo          | Característica principal                  |
+### 📐 Arquitetura e Ambientes
+
+
+| Ambiente  | Objetivo          | Característica Principal                  |
 |-----------|-------------------|-------------------------------------------|
-| dev       | Desenvolvimento   | Estrutura mais simples                    |
-| staging   | Testes            | Simula produção                           |
-| prod      | Produção          | Multi-AZ para alta disponibilidade        |
+| **dev**   | Desenvolvimento   | Estrutura simples e econômica             |
+| **staging** | Testes            | Simulação fiel da produção                |
+| **prod**  | Produção          | Multi-AZ para alta disponibilidade        |
 
-Produção foi pensada com mais redundância.  
-Desenvolvimento foi pensado para ser leve e econômico.
+**Fluxo da Infraestrutura:**
+1. O módulo `network` estabelece a base (VPC/Subnets).
+2. O módulo `compute` implanta a EC2 na área pública.
+3. O módulo `database` isola o RDS na área privada.
+4. O acesso ao banco é restrito exclusivamente à instância EC2.
 
 ---
 
-## Estrutura do Projeto
+### 📂 Estrutura do Repositório
+Optei pela modularização para garantir que o projeto cresça de forma organizada.
+
+```text
 terraform/
-│
 ├── modules/
-│   ├── network/
-│   ├── iam/
-│   ├── compute/
-│   └── database/
-│
-├── environments/
-│   ├── dev/
-│   ├── staging/
-│   └── prod/
-textEu optei por modularizar tudo para manter organização e permitir que o projeto cresça sem virar bagunça.
+│   ├── network/    # VPC, Subnets, Gateways
+│   ├── iam/        # Roles e Policies
+│   ├── compute/    # EC2 e Security Groups
+│   └── database/   # RDS e Subnet Groups
+└── environments/
+    ├── dev/        # Configs de Desenvolvimento
+    ├── staging/    # Configs de Homologação
+    └── prod/       # Configs de Produção
+Use o código com cuidado.
 
----
+⚙️ Como Executar
+Escolha o ambiente desejado e execute os comandos:
+bash
+# 1. Entre no diretório do ambiente
+cd environments/dev  # ou staging / prod
 
-## ⚙️ Como executar
-
-Entre no ambiente desejado:
-
-```bash
-cd environments/dev
-# ou staging / prod
-Depois execute:
-Bashterraform init
+# 2. Inicialize o Terraform e aplique
+terraform init
 terraform plan
 terraform apply
-Simples. Reproduzível. Versionado.
+Use o código com cuidado.
 
-O que esse projeto representa pra mim
-Esse projeto representa uma transição:
-de apenas um desejo de entrar na área do DevOps
-para alguém que realmente pode estar lá.
-Ele mostra o meu crescimento profissional e pessoal.
+Simples. Reproduzível. Versionado.
+✨ O que este projeto representa
+Ele marca minha transição: de um entusiasta de DevOps para alguém que possui a competência técnica para atuar no mercado. É o reflexo do meu crescimento profissional e pessoal.
