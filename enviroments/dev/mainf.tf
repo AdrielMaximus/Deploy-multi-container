@@ -1,5 +1,3 @@
-# environments/dev/main.tf
-
 terraform {
   required_providers {
     aws = {
@@ -10,37 +8,62 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"  # ou var.region, se preferir
+  region = "us-east-1"  
 }
+
 
 module "network" {
-    source = "../../modules/network"
-    region = "us-east-1"
+  source = "../../modules/network"
 
-    project_name       = "teste"
-    env                = "dev"
-    cidr_block         = "10.99.0.0/16"
-    azs                = ["us-east-1a", "us-east-1b"]
+  project_name = var.project_name
+  env          = var.env
+  cidr_block = "10.0.0.0/16"
 
-    enable_nat_gateway = true
-    single_nat_gateway = true
+  region = "us-east-1"
 
-    common_tags = {
-        Ambiente   = "dev"
-        Projeto    = "aprendizado"
-        Gerenciado = "Terraform"
-    }
+  azs = ["us-east-1a", "us-east-1b"]
+
 }
 
-# Outputs para você ver o resultado
-output "vpc_id" {
-  value = module.network.vpc_id
+module "iam" {
+  source = "../../modules/iam"
+
+  project_name = var.project_name
+  env          = var.env
+  role_name = "${var.project_name}-${var.env}-ec2-role"
+
+  service_principals = ["ec2.amazonaws.com"]
 }
 
-output "public_subnets" {
-  value = module.network.public_subnets
+module "compute" {
+  source = "../../modules/compute"
+
+  project_name = var.project_name
+  env          = var.env
+
+  ami_id        = "ami-0c02fb55956c7d316" 
+  instance_type = "t2.micro"
+
+  subnet_id = module.network.public_subnet_ids[0]
+
+  security_group_ids = []
 }
 
-output "private_subnets" {
-  value = module.network.private_subnets
+module "database" {
+  source = "../../modules/database"
+
+  project_name = var.project_name
+  env          = var.env
+
+  vpc_id             = module.network.vpc_id
+  private_subnet_ids = module.network.private_subnet_ids
+
+  allowed_sg_ids = [module.compute.instance_sg_id]
+
+  engine_version = "15"
+  instance_class = "db.t3.micro"
+
+  db_name     = "appdb"
+  db_username = "postgres"
+  db_password = var.db_password
 }
