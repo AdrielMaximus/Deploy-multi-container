@@ -1,89 +1,224 @@
-markdown
-<p align="center">
-  <img src="https://via.placeholder.com" alt="Banner do Projeto">
-</p>
-
-<h1 align="center">🏗️ Construindo Infraestrutura Realista (Terraform + AWS)</h1>
-
-<p align="center">
-  <img src="https://img.shields.io" />
-  <img src="https://img.shields.io" />
-  <img src="https://img.shields.io" />
-</p>
+Perfeito.
+Aqui está o **README.md pronto para colar no GitHub**, já estruturado em Markdown profissional.
 
 ---
 
-### 🎯 Por que eu criei esse projeto?
-Eu queria sair do básico e provar a mim mesmo que estou pronto para **demandas reais**. Este projeto nasceu da vontade de entender como a infraestrutura é construída profissionalmente, enfrentando os desafios de um ambiente de produção real. Foi a transição do "desejo de aprender" para o "aprender fazendo".
+```markdown
+# 🚀 AWS Infrastructure as Code com Terraform
+
+## 📌 Overview
+
+Este projeto implementa uma infraestrutura completa na AWS utilizando Terraform, com foco em:
+
+- Arquitetura modular
+- Separação de ambientes (`dev`, `staging`, `prod`)
+- Boas práticas de segurança
+- Escalabilidade
+- Reprodutibilidade total via código
+
+Toda a infraestrutura é provisionada automaticamente, sem uso manual do console da AWS.
 
 ---
 
-### 🚀 O que este projeto faz?
-Provisionamento automático na **AWS** utilizando arquitetura modular:
-- 🌐 **VPC Organizada**: Com Subnets públicas e privadas.
-- 💻 **Instância EC2**: Camada de processamento.
-- 🐘 **RDS PostgreSQL**: Banco de dados gerenciado.
-- 🔐 **IAM Role**: Controle granular de acesso.
-- 🏗️ **Multi-Environment**: Separação total entre `dev`, `staging` e `prod`.
+## 🏗 Arquitetura
 
----
+A infraestrutura provisiona:
 
-### 🧠 O que eu quis demonstrar aqui?
-Mais do que criar recursos, este projeto reflete meu domínio em:
-- **Modularização e Reutilização**: Código limpo e escalável.
-- **Segurança**: Banco de dados isolado em subnets privadas.
-- **Resiliência**: Configuração Multi-AZ para o ambiente de produção.
-- **Resolução de Problemas**: Superação de desafios com `for_each`, dependências de módulos e outputs.
+- VPC customizada
+- Subnets públicas e privadas
+- Instância EC2 em subnet pública
+- Banco PostgreSQL via RDS em subnet privada
+- IAM Role associada à EC2
+- Multi-AZ no ambiente de produção
 
----
+### Fluxo de Arquitetura
 
-### 📐 Arquitetura e Ambientes
-
-
-| Ambiente  | Objetivo          | Característica Principal                  |
-|-----------|-------------------|-------------------------------------------|
-| **dev**   | Desenvolvimento   | Estrutura simples e econômica             |
-| **staging** | Testes            | Simulação fiel da produção                |
-| **prod**  | Produção          | Multi-AZ para alta disponibilidade        |
-
-**Fluxo da Infraestrutura:**
-1. O módulo `network` estabelece a base (VPC/Subnets).
-2. O módulo `compute` implanta a EC2 na área pública.
-3. O módulo `database` isola o RDS na área privada.
-4. O acesso ao banco é restrito exclusivamente à instância EC2.
-
----
-
-### 📂 Estrutura do Repositório
-Optei pela modularização para garantir que o projeto cresça de forma organizada.
-
-```text
-terraform/
-├── modules/
-│   ├── network/    # VPC, Subnets, Gateways
-│   ├── iam/        # Roles e Policies
-│   ├── compute/    # EC2 e Security Groups
-│   └── database/   # RDS e Subnet Groups
-└── environments/
-    ├── dev/        # Configs de Desenvolvimento
-    ├── staging/    # Configs de Homologação
-    └── prod/       # Configs de Produção
-Use o código com cuidado.
-
-⚙️ Como Executar
-Escolha o ambiente desejado e execute os comandos:
-bash
-# 1. Entre no diretório do ambiente
-cd environments/dev  # ou staging / prod
-
-# 2. Inicialize o Terraform e aplique
-terraform init
-terraform plan
-terraform apply
-Use o código com cuidado.
 ```
+
+Internet
+↓
+Subnet Pública
+↓
+EC2 (Application Layer)
+↓
+Subnet Privada
+↓
+RDS PostgreSQL
+
+```
+
+O banco de dados não é exposto à internet.  
+A comunicação ocorre apenas internamente na VPC.
+
 ---
 
-✨ O que este projeto representa:
+## ☁️ Tecnologias Utilizadas
 
-Ele marca minha transição: de um entusiasta de DevOps para alguém que possui a competência técnica para atuar no mercado. É o reflexo do meu crescimento profissional e pessoal.
+- Amazon Web Services (AWS)
+- Terraform
+- Amazon VPC
+- Amazon EC2
+- Amazon RDS
+- AWS IAM
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
+
+terraform/
+│
+├── modules/
+│   ├── network/
+│   ├── iam/
+│   ├── compute/
+│   └── database/
+│
+├── environments/
+│   ├── dev/
+│   ├── staging/
+│   └── prod/
+
+```
+
+### Estratégia adotada
+
+- **Modules** → Recursos desacoplados e reutilizáveis
+- **Environments** → Configurações específicas por ambiente
+- **Variáveis parametrizadas**
+- **Outputs organizados**
+
+Essa estrutura permite escalar o projeto mantendo organização e clareza.
+
+---
+
+## ⚙️ Ambientes
+
+| Ambiente | Objetivo | Características |
+|----------|----------|----------------|
+| dev | Desenvolvimento | Infraestrutura simplificada |
+| staging | Testes | Estrutura próxima da produção |
+| prod | Produção | Multi-AZ e maior disponibilidade |
+
+---
+
+## 🔐 Decisões Técnicas
+
+### Banco em Subnet Privada
+Evita exposição direta à internet.
+
+### EC2 com IAM Role
+Evita uso de credenciais fixas no código.
+
+### Modularização
+Permite:
+- Reutilização
+- Escalabilidade
+- Manutenção simplificada
+
+### Multi-AZ em Produção
+Garante redundância e maior disponibilidade.
+
+---
+
+## 🚀 Como Executar
+
+### 1️⃣ Pré-requisitos
+
+- Terraform instalado
+- Conta AWS configurada
+- AWS CLI configurada (`aws configure`)
+
+---
+
+### 2️⃣ Escolher o ambiente
+
+```
+
+cd environments/dev
+
+```
+
+---
+
+### 3️⃣ Inicializar Terraform
+
+```
+
+terraform init
+
+```
+
+---
+
+### 4️⃣ Planejar
+
+```
+
+terraform plan
+
+```
+
+---
+
+### 5️⃣ Aplicar
+
+```
+
+terraform apply
+
+```
+
+---
+
+## 🔄 Destruir Infraestrutura
+
+```
+
+terraform destroy
+
+```
+
+---
+
+## 📊 O que este projeto demonstra
+
+- Infraestrutura como Código
+- Arquitetura modular em Terraform
+- Separação real de ambientes
+- Boas práticas de segurança
+- Pensamento voltado para produção
+
+---
+
+## 🧠 Próximas Evoluções
+
+- Remote backend (S3 + DynamoDB)
+- Application Load Balancer
+- Auto Scaling Group
+- CI/CD pipeline
+- Monitoramento
+- Testes automatizados de infraestrutura
+
+---
+
+## 🎯 Objetivo
+
+Este projeto foi desenvolvido para demonstrar capacidade de:
+
+- Projetar infraestrutura escalável
+- Organizar código de forma profissional
+- Aplicar boas práticas de Cloud Engineering
+- Evoluir arquitetura progressivamente
+```
+
+---
+
+Se você quiser, posso agora:
+
+* 🔥 Deixar ele mais técnico (incluindo exemplos de código Terraform)
+* 🎯 Ajustar para ficar 100% alinhado com vaga de DevOps
+* 📈 Transformar em versão “impacto máximo para recrutador”
+
+Qual direção você quer seguir?
