@@ -82,6 +82,8 @@ terraform plan
 terraform apply
 Use o código com cuidado.
 
+---
+
 Simples. Reproduzível. Versionado.
 ✨ O que este projeto representa
 Ele marca minha transição: de um entusiasta de DevOps para alguém que possui a competência técnica para atuar no mercado. É o reflexo do meu crescimento profissional e pessoal.
