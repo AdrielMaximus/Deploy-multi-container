@@ -43,8 +43,9 @@ module "compute" {
 
   ami_id        = "ami-0c02fb55956c7d316" 
   instance_type = "t2.micro"
+  vpc_id = module.network.vpc_id
 
-  subnet_id = module.network.public_subnet_ids[0]
+  subnet_id = module.network.public_subnets[0]
 
   security_group_ids = []
 }
@@ -56,7 +57,7 @@ module "database" {
   env          = var.env
 
   vpc_id             = module.network.vpc_id
-  private_subnet_ids = module.network.private_subnet_ids
+  private_subnet_ids = module.network.private_subnets
 
   allowed_sg_ids = [module.compute.instance_sg_id]
 

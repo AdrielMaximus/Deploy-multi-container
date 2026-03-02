@@ -9,3 +9,6 @@ output "private_ip" {
 output "public_ip" {
   value = aws_instance.this.public_ip
 }
+output "instance_sg_id" {
+  value = aws_security_group.instance.id
+}

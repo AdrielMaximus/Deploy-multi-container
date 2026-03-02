@@ -28,3 +28,12 @@ resource "aws_instance" "this" {
     Name = "${local.name_prefix}-ec2"
   })
 }
+resource "aws_security_group" "instance" {
+  name_prefix = "${local.name_prefix}-ec2-sg"
+  description = "Security group for EC2"
+  vpc_id      = var.vpc_id
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-ec2-sg"
+  })
+}

@@ -41,3 +41,7 @@ variable "common_tags" {
   type    = map(string)
   default = {}
 }
+variable "vpc_id" {
+  description = "VPC ID where the EC2 will be created"
+  type        = string
+}

@@ -12,22 +12,22 @@ output "vpc_cidr_block" {
 
 output "public_subnets" {
   description = "Lista de IDs das subnets públicas"
-  value       = aws_subnet.public[*].id
+  value       = [for s in aws_subnet.public : s.id]
 }
 
 output "public_subnet_cidrs" {
-  description = "Lista dos blocos CIDR das subnets públicas"
-  value       = aws_subnet.public[*].cidr_block
+  description = "Lista de CIDRs das subnets públicas"
+  value       = [for s in aws_subnet.public : s.cidr_block]
 }
 
 output "private_subnets" {
   description = "Lista de IDs das subnets privadas"
-  value       = aws_subnet.private[*].id
+  value       = [for s in aws_subnet.private : s.id]
 }
 
 output "private_subnet_cidrs" {
-  description = "Lista dos blocos CIDR das subnets privadas"
-  value       = aws_subnet.private[*].cidr_block
+  description = "Lista de CIDRs das subnets privadas"
+  value       = [for s in aws_subnet.private : s.cidr_block]
 }
 
 output "internet_gateway_id" {
@@ -54,3 +54,4 @@ output "private_route_table_id" {
   description = "ID da route table privada (se NAT estiver habilitado)"
   value       = try(aws_route_table.private[0].id, null)
 }
+
