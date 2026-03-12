@@ -1,224 +1,146 @@
-Perfeito.
-Aqui está o **README.md pronto para colar no GitHub**, já estruturado em Markdown profissional.
+# AWS Infrastructure as Code com Terraform
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/Terraform-v1.x-623CE4?style=for-the-badge&logo=terraform&logoColor=white" alt="Terraform"/>
+  <img src="https://img.shields.io/badge/AWS-Cloud-blue?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS"/>
+  <img src="https://img.shields.io/badge/Modular-Multi--Environment-success?style=for-the-badge" alt="Modular"/>
+  <img src="https://img.shields.io/badge/Secure-Best%20Practices-orange?style=for-the-badge" alt="Secure"/>
+  <img src="https://img.shields.io/badge/Status-Concluído-brightgreen?style=for-the-badge" alt="Status"/>
+</p>
 
-```markdown
-# 🚀 AWS Infrastructure as Code com Terraform
+**Projeto de portfólio que demonstra IaC completa na AWS com Terraform:**  
+VPC customizada + EC2 + RDS PostgreSQL + IAM Role + separação de ambientes (dev/staging/prod) + modularização profissional + foco em segurança e escalabilidade.
 
-## 📌 Overview
+> "Queria mostrar que consigo projetar e provisionar infraestrutura production-ready de forma limpa, segura e reproduzível — sem clicar no console."
 
-Este projeto implementa uma infraestrutura completa na AWS utilizando Terraform, com foco em:
+### O que este projeto entrega (em 30 segundos)
 
-- Arquitetura modular
-- Separação de ambientes (`dev`, `staging`, `prod`)
-- Boas práticas de segurança
-- Escalabilidade
-- Reprodutibilidade total via código
+- VPC com subnets públicas e privadas
+- EC2 em subnet pública (com IAM Role — sem chaves fixas)
+- RDS PostgreSQL em subnet privada (sem exposição à internet)
+- Multi-AZ em produção para alta disponibilidade
+- Arquitetura modular (modules reutilizáveis)
+- Ambientes isolados (dev / staging / prod)
+- Tudo provisionado via código Terraform
 
-Toda a infraestrutura é provisionada automaticamente, sem uso manual do console da AWS.
+### Arquitetura completa
 
----
+<p align="center">
+  <img src="2981db78-171b-40aa-8e4b-e9923b046dbb.jpg" alt="Arquitetura AWS: VPC com subnets públicas/privadas, EC2 pública, RDS PostgreSQL privada, IAM Role, Multi-AZ" width="800"/>
+</p>
 
-## 🏗 Arquitetura
+<p align="center">
+  <img src="70f70764-8aa0-434e-992a-63d0c974266c.jpg" alt="Arquitetura AWS: VPC com subnets públicas/privadas, EC2 pública, RDS PostgreSQL privada, IAM Role, Multi-AZ" width="800"/>
+</p>
 
-A infraestrutura provisiona:
+**Fluxo principal:**
+- Internet → Internet Gateway → Subnet Pública → EC2 (app layer)
+- EC2 → VPC interna → Subnet Privada → RDS PostgreSQL
+- RDS isolado (sem acesso público)
+- IAM Role garante acesso seguro sem credenciais hardcoded
 
-- VPC customizada
-- Subnets públicas e privadas
-- Instância EC2 em subnet pública
-- Banco PostgreSQL via RDS em subnet privada
-- IAM Role associada à EC2
-- Multi-AZ no ambiente de produção
+- [Diagrama clean VPC + EC2 + RDS (recomendado – production-ready)](https://miro.medium.com/v2/resize:fit:1400/1*2Hv4lH0-1fhM3ZQ2tWcQ_g.png)  
+- [Terraform modules com dev/staging/prod + VPC/EC2/RDS](https://i.ytimg.com/vi/0uxcZEFjizo/sddefault.jpg)  
+- [VPC multi-AZ com subnets, NAT, EC2 e RDS](https://miro.medium.com/1*Ng3kWlSQqIk5rECJb26YPA.png)
 
-### Fluxo de Arquitetura
+### Tecnologias & Ferramentas
 
-```
+| Categoria       | Ferramenta       | Por que usei?                                      |
+|-----------------|------------------|----------------------------------------------------|
+| IaC             | Terraform        | Provisionamento declarativo e idempotente          |
+| Cloud           | AWS              | VPC, EC2, RDS, IAM                                 |
+| Rede            | VPC              | Isolamento, subnets públicas/privadas              |
+| Compute         | EC2              | Camada de aplicação (com IAM Role)                 |
+| Database        | RDS PostgreSQL   | Banco gerenciado, seguro e escalável               |
+| Segurança       | IAM, Security Groups | Least privilege, sem exposição desnecessária     |
 
-Internet
-↓
-Subnet Pública
-↓
-EC2 (Application Layer)
-↓
-Subnet Privada
-↓
-RDS PostgreSQL
-
-```
-
-O banco de dados não é exposto à internet.  
-A comunicação ocorre apenas internamente na VPC.
-
----
-
-## ☁️ Tecnologias Utilizadas
-
-- Amazon Web Services (AWS)
-- Terraform
-- Amazon VPC
-- Amazon EC2
-- Amazon RDS
-- AWS IAM
-
----
-
-## 📂 Estrutura do Projeto
+### Estrutura do Projeto (modular e escalável)
 
 ```
-
-terraform/
+terraform-aws-iac/
 │
 ├── modules/
-│   ├── network/
-│   ├── iam/
-│   ├── compute/
-│   └── database/
+│   ├── network/       # VPC, subnets, IGW, NAT, route tables
+│   ├── iam/           # Roles e policies
+│   ├── compute/       # EC2 + security groups
+│   └── database/      # RDS PostgreSQL
 │
 ├── environments/
-│   ├── dev/
-│   ├── staging/
-│   └── prod/
-
+│   ├── dev/           # tfvars simplificados
+│   ├── staging/       # Mais recursos, mas sem full HA
+│   └── prod/          # Multi-AZ, backups, etc.
+│
+├── main.tf            # Entry point por ambiente
+├── variables.tf
+├── outputs.tf
+└── README.md
 ```
 
-### Estratégia adotada
+### ⚙️ Ambientes configurados
 
-- **Modules** → Recursos desacoplados e reutilizáveis
-- **Environments** → Configurações específicas por ambiente
-- **Variáveis parametrizadas**
-- **Outputs organizados**
+| Ambiente  | Objetivo              | Características principais                  |
+|-----------|-----------------------|---------------------------------------------|
+| dev       | Desenvolvimento       | Single-AZ, custo baixo, rápido              |
+| staging   | Testes/QA             | Multi-AZ parcial, similar à prod            |
+| prod      | Produção              | Multi-AZ full, alta disponibilidade, backups |
 
-Essa estrutura permite escalar o projeto mantendo organização e clareza.
+### 🔐 Decisões de segurança e melhores práticas
 
----
+- RDS 100% privado (sem public access)
+- EC2 sem chaves SSH hardcoded → usa IAM Role
+- Security Groups restritivos (least privilege)
+- Subnets privadas com NAT Gateway (outbound controlado)
+- Modularização → fácil manutenção e reutilização
+- Variáveis por ambiente → evita repetição
 
-## ⚙️ Ambientes
+### 🚀 Como executar (passo a passo)
 
-| Ambiente | Objetivo | Características |
-|----------|----------|----------------|
-| dev | Desenvolvimento | Infraestrutura simplificada |
-| staging | Testes | Estrutura próxima da produção |
-| prod | Produção | Multi-AZ e maior disponibilidade |
-
----
-
-## 🔐 Decisões Técnicas
-
-### Banco em Subnet Privada
-Evita exposição direta à internet.
-
-### EC2 com IAM Role
-Evita uso de credenciais fixas no código.
-
-### Modularização
-Permite:
-- Reutilização
-- Escalabilidade
-- Manutenção simplificada
-
-### Multi-AZ em Produção
-Garante redundância e maior disponibilidade.
-
----
-
-## 🚀 Como Executar
-
-### 1️⃣ Pré-requisitos
-
-- Terraform instalado
-- Conta AWS configurada
+**Pré-requisitos**
+- Terraform ≥ 1.5 instalado
 - AWS CLI configurada (`aws configure`)
+- Conta AWS com permissões adequadas
 
----
+1. Clone o repositório
+   ```bash
+   git clone https://github.com/SEU_USUARIO/terraform-aws-iac.git
+   cd terraform-aws-iac
+   ```
 
-### 2️⃣ Escolher o ambiente
+2. Escolha o ambiente
+   ```bash
+   cd environments/dev   # ou staging / prod
+   ```
 
-```
+3. Inicialize
+   ```bash
+   terraform init
+   ```
 
-cd environments/dev
+4. Planeje (veja o que vai criar)
+   ```bash
+   terraform plan
+   ```
 
-```
+5. Aplique
+   ```bash
+   terraform apply --auto-approve   # (cuidado em prod!)
+   ```
 
----
+6. (Opcional) Verifique outputs
+   ```bash
+   terraform output
+   ```
 
-### 3️⃣ Inicializar Terraform
-
-```
-
-terraform init
-
-```
-
----
-
-### 4️⃣ Planejar
-
-```
-
-terraform plan
-
-```
-
----
-
-### 5️⃣ Aplicar
-
-```
-
-terraform apply
-
-```
-
----
-
-## 🔄 Destruir Infraestrutura
-
-```
-
+**Destruir (importante para evitar custos!)**
+```bash
 terraform destroy
-
 ```
 
----
+### Habilidades demonstradas
 
-## 📊 O que este projeto demonstra
-
-- Infraestrutura como Código
-- Arquitetura modular em Terraform
-- Separação real de ambientes
-- Boas práticas de segurança
-- Pensamento voltado para produção
-
----
-
-## 🧠 Próximas Evoluções
-
-- Remote backend (S3 + DynamoDB)
-- Application Load Balancer
-- Auto Scaling Group
-- CI/CD pipeline
-- Monitoramento
-- Testes automatizados de infraestrutura
-
----
-
-## 🎯 Objetivo
-
-Este projeto foi desenvolvido para demonstrar capacidade de:
-
-- Projetar infraestrutura escalável
-- Organizar código de forma profissional
-- Aplicar boas práticas de Cloud Engineering
-- Evoluir arquitetura progressivamente
-```
-
----
-
-Se você quiser, posso agora:
-
-* 🔥 Deixar ele mais técnico (incluindo exemplos de código Terraform)
-* 🎯 Ajustar para ficar 100% alinhado com vaga de DevOps
-* 📈 Transformar em versão “impacto máximo para recrutador”
-
-Qual direção você quer seguir?
+- IaC com Terraform (módulos + multi-ambiente)
+- Design de rede segura na AWS (VPC best practices)
+- Configuração de EC2 + RDS com segurança
+- Uso de IAM Roles (zero hardcoded credentials)
+- Pensamento production-ready (Multi-AZ, escalabilidade futura)
+- Documentação clara e reproduzível
